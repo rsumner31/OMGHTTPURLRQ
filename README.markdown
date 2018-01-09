@@ -23,8 +23,6 @@ You can then pass these to an `NSURLConnection` or `NSURLSession`.
 
 ## `multipart/form-data`
 
-OMG! Constructing multipart/form-data for POST requests is complicated, let us do it for you:
-
 ```objc
 
 OMGMultipartFormData *multipartFormData = [OMGMultipartFormData new];
@@ -39,16 +37,14 @@ NSData *data2 = UIImagePNGRepresentation(image2);
 [multipartFormData addFile:data2 parameterName:@"file2" filename:@"myimage2.png" contentType:@"image/png"];
 
 // SUPER Ideally you would not want to re-encode the JPEG as the process
-// is lossy. If your image comes from the AssetLibrary you *CAN* get the
+// is lossy. If you image comes from the AssetLibrary you *CAN* get the
 // original `NSData`. See stackoverflow.com.
 UIImage *image3 = [UIImage imageNamed:@"image3"];
 NSData *data3 = UIImageJPEGRepresentation(image3);
 [multipartFormData addFile:data3 parameterName:@"file2" filename:@"myimage3.jpeg" contentType:@"image/jpeg"];
 
-NSMutableURLRequest *rq = [OMGHTTPURLRQ POST:url:multipartFormData];
+NSMutableURLRequest *rq = [OMGHTTPURLRQ POST:url:builder];
 ```
-
-Now feed `rq` to `[NSURLConnection sendSynchronousRequest:returningResponse:error:`.
 
 
 ## Configuring an `NSURLSessionUploadTask`

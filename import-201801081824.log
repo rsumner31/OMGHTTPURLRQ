@@ -1,0 +1,28 @@
+From 0a0b9ebf56825697d9b371fb0a58536801716003 Mon Sep 17 00:00:00 2001
+From: Ben Roytenberg <ben@stockx.com>
+Date: Sat, 20 May 2017 11:22:28 -0400
+Subject: [PATCH] Forgot that Linux doesn't have the  command
+
+---
+ .bash_aliases | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/.bash_aliases b/.bash_aliases
+index 4a89358..33a96cf 100644
+--- a/.bash_aliases
++++ b/.bash_aliases
+@@ -71,7 +71,9 @@ if [ "$(uname -s)" == "Darwin" ]; then
+ fi
+ 
+ ## reveal: lost in the terminal? Just reveal your current folder programmaticaly.
+-alias reveal="open ."
++if [ "$(uname -s)" == "Darwin" ]; then
++  alias reveal="open ."
++fi
+ 
+ ### up: cd .. when you're too lazy to use the spacebar
+ alias up="cd .."
+--
+Working Copy 3.2.2
+
+

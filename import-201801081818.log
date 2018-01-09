@@ -1,0 +1,178 @@
+From 2985f50a8e1b0e9091b388a5f55eb0d693647347 Mon Sep 17 00:00:00 2001
+From: Ben Roytenberg <ben@stockx.com>
+Date: Sat, 20 May 2017 11:36:49 -0400
+Subject: [PATCH] Reorganized categories by OS, isolated git alias suite.
+
+---
+ .bash_aliases | 117 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++----------------------------------------
+ 1 file changed, 77 insertions(+), 40 deletions(-)
+
+diff --git a/.bash_aliases b/.bash_aliases
+index 33a96cf..17559aa 100644
+--- a/.bash_aliases
++++ b/.bash_aliases
+@@ -13,9 +13,25 @@
+ #
+ # All you can eat. Take whatever you want/need.
+ #
++# Categorized by operating system.
++#
+ # Made by: Ben Roytenberg (roytenberg@users.noreply.github.com)
+ ###############################################################################
+ 
++###############################################################################
++#
++# 88        88               88               
++# 88        88               ""               
++# 88        88                                
++# 88        88  8b,dPPYba,   88  8b,     ,d8  
++# 88        88  88P'   `"8a  88   `Y8, ,8P'   
++# 88        88  88       88  88     )888(     
++# Y8a.    .a8P  88       88  88   ,d8" "8b,   
++#  `"Y8888Y"'   88       88  88  8P'     `Y8
++#
++# Usable by basically all Unix-like machines out of the box.
++###############################################################################
++
+ ### sudo hack: so you can use custom aliases as sudo
+ ###
+ ### NOTE - bash will normally stop recognizing aliases after it sees
+@@ -29,30 +45,6 @@ if [ "$(uname -s)" != "Darwin" ]; then # macOS doesn't have shopt...
+   shopt -s autocd
+ fi
+ 
+-### weather: pass your city or zip code, and it returns the weather!
+-###
+-### USAGE - weather cleveland
+-###         OR
+-###         weather 44106
+-###
+-### WARNING - city and zip code args may yield inaccurate/different results.
+-weather() { curl wttr.in/"$1"; }
+-
+-### nh: run a task in the background with nohup - handy when a program needs
+-### environment variables from the shell
+-nh() { nohup $1 >/dev/null 2>/dev/null & }
+-
+-### grepex: search recursively for a pattern in the current directory, but
+-### exclude files and folders which match a second pattern
+-### example: grepex word node_modules
+-grepex() { grep -rH $1 `ls -a | grep -ve "^\($2\)\|\(\.\)\{1,2\}$"`; }
+-
+-### myip: prints out your IP address. Handy to check if your VPN is on!
+-alias myip="curl icanhazip.com"
+-
+-### plz: re-run the last command as root.
+-alias plz="fc -l -1 | cut -d' ' -f2- | xargs sudo"
+-
+ ### ls but better: add some color to your life.
+ if [ "$(uname -s)" == "Darwin" ]; then # OS X sucks.
+   alias ls="ls -G"
+@@ -62,19 +54,9 @@ fi
+ 
+ ### a more verbose, colorful ls: see almost everything!
+ ###
+-### DEPENDENCY - ls colorization (see above)
++### DEPENDENCY - ls but better (see above)
+ alias lsm="ls -hlAFG"
+ 
+-### render the given manpage in Preview.app
+-if [ "$(uname -s)" == "Darwin" ]; then
+-  pman() { ps=`mktemp -t manpageXXXX`.ps ; man -t $@ > "$ps" ; open "$ps" ; }
+-fi
+-
+-## reveal: lost in the terminal? Just reveal your current folder programmaticaly.
+-if [ "$(uname -s)" == "Darwin" ]; then
+-  alias reveal="open ."
+-fi
+-
+ ### up: cd .. when you're too lazy to use the spacebar
+ alias up="cd .."
+ 
+@@ -100,6 +82,21 @@ elif [ ! -z "$(which zypper)" ]; then
+   alias update="sudo zypper update"
+ fi
+ 
++### weather: pass your city or zip code, and it returns the weather!
++###
++### USAGE - weather cleveland
++###         OR
++###         weather 44106
++###
++### WARNING - city and zip code args may yield inaccurate/different results.
++weather() { curl wttr.in/"$1"; }
++
++### myip: prints out your IP address. Handy to check if your VPN is on!
++alias myip="curl icanhazip.com"
++
++### plz: re-run the last command as root.
++alias plz="fc -l -1 | cut -d' ' -f2- | xargs sudo"
++
+ ### ports: lists all ports open and which programs are using them
+ alias ports="netstat -tulpn"
+ 
+@@ -122,6 +119,51 @@ incognito() {
+   esac
+ }
+ 
++### download: download any and every item linked from that page.
++###
++### USAGE - download https://data.gov
++alias download="wget --random-wait -r -p --no-parent -e robots=off -U mozilla"
++
++###############################################################################
++#                                                                        
++#                                               ,ad8888ba,     ad88888ba   
++#                                              d8"'    `"8b   d8"     "8b  
++#                                             d8'        `8b  Y8,          
++# 88,dPYba,,adPYba,   ,adPPYYba,   ,adPPYba,  88          88  `Y8aaaaa,    
++# 88P'   "88"    "8a  ""     `Y8  a8"     ""  88          88    `"""""8b,  
++# 88      88      88  ,adPPPPP88  8b          Y8,        ,8P          `8b  
++# 88      88      88  88,    ,88  "8a,   ,aa   Y8a.    .a8P   Y8a     a8P  
++# 88      88      88  `"8bbdP"Y8   `"Ybbd8"'    `"Y8888Y"'     "Y88888P"   
++#
++# Usable only by macOS out of the box.
++###############################################################################
++
++### pman: render the given manpage in Preview.app
++if [ "$(uname -s)" == "Darwin" ]; then
++  pman() { ps=`mktemp -t manpageXXXX`.ps ; man -t $@ > "$ps" ; open "$ps" ; }
++fi
++
++## reveal: lost in the terminal? Just reveal your current folder programmaticaly.
++if [ "$(uname -s)" == "Darwin" ]; then
++  alias reveal="open ."
++fi
++
++###############################################################################
++#                         
++#              88           
++#              ""    ,d     
++#                    88     
++#  ,adPPYb,d8  88  MM88MMM  
++# a8"    `Y88  88    88     
++# 8b       88  88    88     
++# "8a,   ,d88  88    88,    
++#  `"YbbdP"Y8  88    "Y888  
++# aa,    ,88               
++#  "Y8bbdP"     
++#
++# A suite of git commands.
++###############################################################################
++
+ ### gpom: simplistic git push origin master alias.
+ alias gpom="git push origin master"
+ 
+@@ -137,8 +179,3 @@ alias stash="git stash"
+ 
+ ### push-please: force-pushing, but more polite!
+ alias push-please="git push --force-with-lease"
+-
+-### download: download any and every item linked from that page.
+-###
+-### USAGE - download https://data.gov
+-alias download="wget --random-wait -r -p --no-parent -e robots=off -U mozilla"
+--
+Working Copy 3.2.2
+
+
